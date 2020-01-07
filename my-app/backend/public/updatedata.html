@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div
+      style="background-color:yellow; border:2px dotted red; padding:50px; margin:50px; padding-left:150px;"
+    >
+      <h1>This page is for updating the data------------------</h1>
+      <br /><br />
+      <form
+        action="http://127.0.0.1:8081/update_get"
+        method="POST"
+        target="_self"
+      >
+        First Name :-
+        <input
+          type="text"
+          name="firstName"
+          placeholder="enter fname"
+          required
+        /><br /><br />
+        Age:-
+        <input
+          type="number"
+          name="age"
+          placeholder="Enter Age"
+          required
+        /><br /><br />
+        <h1>Update The feild's with certains new values---------</h1>
+        <br /><br />
+        <br /><br />
+        Select fiels:-<input list="selections" name="selection" />
+        <datalist id="selections">
+          <option value="firstName"> </option>
+          <option value="lastName"> </option>
+          <option value="age"> </option>
+          <option value="email"> </option>
+          <option value="Number"></option>
+          <option value="file"></option>
+          <option value="file1"></option>
+          <option value="Password"></option></datalist
+        ><br /><br />
+        Required new value:-<input
+          type="text"
+          name="newvalue"
+          placeholder="New Value"
+          required
+        /><br /><br />
+        <input type="submit" /><br /><br />
+      </form>
+    </div>
+  </body>
+</html>

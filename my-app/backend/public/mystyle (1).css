@@ -1,0 +1,68 @@
+body {
+  background-image: url("C:/Users/com-16/Desktop/s.jpg");
+}
+#a1 {
+  background-color: lightblue;
+  width: 70%;
+  height: 500px;
+  margin: 80px;
+  margin-left: 170px;
+  background-image: url("C:/Users/com-16/Desktop/Key Facts.jpg");
+}
+#a11 {
+  width: 90%;
+  height: 80px;
+  margin: 20px;
+  background-color: blue;
+  background-image: url("C:/Users/com-16/Desktop/cat1.jpg");
+}
+#ww {
+  display: inline-block;
+
+  font-size: 40px;
+  margin-top: 10px;
+  color: peru;
+  background-color: forestgreen;
+}
+#a12 {
+  height: 380px;
+  width: 80%;
+  float: left;
+  background-color: red;
+  background-image: url("C:/Users/com-16/Desktop/bird2.jpg");
+
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+}
+.cc2 {
+  display: inline-block;
+  height: 90px;
+  width: 24%;
+  background-color: red;
+
+  font-size: 60px;
+
+  border: 1px solid black;
+  text-align: center;
+  color: red;
+}
+.a2 {
+  height: 100%;
+  width: 100%;
+  background-color: red;
+  font-size: 60px;
+  float: left;
+  text-align: center;
+  color: red;
+}
+button {
+  background-color: lightpink;
+  color: aqua;
+  font-size: 65px;
+}
+button:hover {
+  color: royalblue;
+}

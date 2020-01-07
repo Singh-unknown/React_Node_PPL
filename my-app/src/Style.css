@@ -1,0 +1,84 @@
+.superClass {
+  height: 750px;
+  width: 100%;
+  background: url("bmw.jpg");
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-attachment: scroll;
+}
+.mainClass {
+  padding: 5px;
+}
+.subClass {
+  text-align: center;
+  color: rgb(114, 87, 29);
+  padding: 4px;
+  font-size: 25px;
+  margin: 4px;
+}
+
+input {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border: 1px lightslategray;
+  padding: 10px;
+  border-radius: 34px;
+  width: 270px;
+  text-align: center;
+  opacity: 0.5;
+  font-size: 25px;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+  color: red;
+}
+button {
+  color: darkgray;
+  font-size: 30px;
+  background-color: rgba(192, 192, 192, 0.3);
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+  border: none;
+  width: 250px;
+  height: 70px;
+  border-radius: 34px;
+}
+button:hover {
+  color: red;
+}
+p {
+  font-size: 25px;
+  color: white;
+  text-shadow: 0 0 3px #ff0000, 0 0 5px #0000ff;
+}
+.subClass3 {
+  color: red;
+  font-size: 15px;
+  padding: 0;
+  margin: 0;
+  margin-left: 450px;
+  text-shadow: none;
+}
+.subClass2 {
+  text-align: center;
+  color: rgb(60, 60, 60);
+  padding: 0;
+  font-size: 20px;
+}
+.mHeading {
+  display: inline-block;
+  width: 100%;
+}
+.Heading {
+  height: 80px;
+  width: 20%;
+  border: none;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+.Heading.button {
+  color: red;
+}
+.subHeading {
+  color: darkolivegreen;
+  text-decoration: none;
+}
+.subHeading:hover {
+  color: red;
+}

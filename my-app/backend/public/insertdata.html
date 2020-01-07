@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Please type the details below--</h1>
+    <br /><br />
+    <div
+      style="background-color:lightslategrey; border:2px dotted red; padding:30px; margin:30px; padding-left:140px;"
+    >
+      <form
+        action="http://127.0.0.1:8081/process_get"
+        method="POST"
+        target="_self"
+      >
+        First name:-
+        <input
+          type="test"
+          name="firstName"
+          placeholder="first name"
+          required
+        /><br /><br />
+        Last name:-
+        <input
+          type="text"
+          name="lastName"
+          placeholder="Last name"
+          required
+        /><br /><br />
+
+        Age:-
+        <input
+          type="number"
+          name="age"
+          placeholder="Age"
+          required
+        /><br /><br />
+        Email:-<input
+          type="email"
+          name="email"
+          placeholder="Email I'D"
+          required
+        /><br /><br />
+        Phone Number:-
+        <input
+          type="text"
+          name="Number"
+          placeholder="Phone No."
+          minlength="10"
+          maxlength="10"
+          required
+        /><br /><br />
+        FIle:-<input type="file" name="file" /><br /><br />
+        File:-<input type="file" name="file1" /><br /><br />
+
+        Password:-
+        <input
+          type="password"
+          name="Password"
+          placeholder="Password"
+          required
+        /><br /><br />
+
+        <input type="submit" />
+      </form>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div
+      style="background-color:yellow; border:2px dotted red; padding:40px; margin:40px; padding-left:140px;"
+    >
+      <h1>This page is for deleting the data from Data Base</h1>
+      <br /><br />
+      <form
+        action="http://127.0.0.1:8081/delete_get"
+        method="POST"
+        target="_self"
+      >
+        <br /><br />
+        Enter The First Name:-<input
+          type="text"
+          name="firstName"
+          placeholder="First Name"
+          required
+        /><br /><br />
+        Enter the Age :-
+        <input
+          type="number"
+          name="age"
+          placeholder="age"
+          required
+        /><br /><br />
+        <input type="submit" /><br /><br />
+      </form>
+    </div>
+  </body>
+</html>

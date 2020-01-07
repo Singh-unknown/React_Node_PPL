@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div
+      style="background-color:yellow; border:2px dotted red; padding:60px; margin:60px; padding-left:160px;"
+    >
+      <h1>
+        Please choose a valid input for perform the specific operation on Data
+        Base---
+      </h1>
+      <br /><br />
+      <form action="http://127.0.0.1:8081/" method="POST" target="_blank">
+        <br /><br />
+        <input list="operations" name="operation" />
+        <datalist id="operations">
+          <option value="insert"> </option>
+          <option value="fetch"> </option>
+          <option value="delete"> </option>
+          <option value="update"> </option>
+        </datalist>
+        <input type="submit" />
+      </form>
+    </div>
+  </body>
+</html>
