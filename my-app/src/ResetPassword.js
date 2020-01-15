@@ -1,73 +1,59 @@
 import React from "react";
-//import logo from "./logo.svg";
-import "./App.css";
-//import loginppl from "./loginppl";
-import { Link } from "react-router-dom";
 import axios from "axios";
-//var myarray = [];
-class App extends React.Component {
+import { Link, Redirect } from "react-router-dom";
+class ResetPassword extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      Username: "",
-      Password: "",
-      Email: "",
-      FirstName: "",
-      LastName: "",
-      errorMail: "",
-      check: "",
-      Mainh: ""
-    };
+      Email: this.props.match.params.Email,
+      message:"",
+      Password:""
+        };
   }
   submitFunction = event => {
-    this.setState({
-      Username: event.target.Username1.value,
-      Password: event.target.Password1.value,
-      Email: event.target.Email1.value,
-      FirstName: event.target.FirstName1.value,
-      LastName: event.target.LastName1.value,
-      check: event.target.check1.value
-    });
-    const tempdata = {
-      Username: event.target.Username1.value,
-      Password: event.target.Password1.value,
-      Email: event.target.Email1.value,
-      FirstName: event.target.FirstName1.value,
-      LastName: event.target.LastName1.value
-    };
-    axios.post("http://localhost:8081/process_get", tempdata).then(res => {
-      console.log(res);
-      if (res.data === "E-Mail Already exist!..") {
-        console.log("response of the data is: -" + res.data);
-        this.setState({ errorMail: res.data });
-        document.getElementById("checkformail").style.backgroundColor = "red";
-        document.getElementById("checkformail").placeholder =
-          "E-Mail Already exist!";
-      } else {
-        console.log("res is :- " + res.data);
-        let aa = "Signed Up!..";
-        this.setState({ Mainh: aa });
-      }
-    });
     event.preventDefault();
-    event.target.Username1.value = null;
-    event.target.Password1.value = null;
-    event.target.Email1.value = null;
-    event.target.FirstName1.value = null;
-    event.target.LastName1.value = null;
-    event.target.check1.value = null;
-    console.log("Data is Submitted Secussfully.....!!");
-    // alert("Data Is Submitted Secussfully...!");
+    if(event.target.Pass1.value == event.target.Pass2.value){
+    var SendData = {
+      email:this.state.Email,
+      password:event.target.Pass1.value
+    }
+    axios.post("http://localhost:8081/ResetPass_get", SendData).then(res => {
+    console.log("res at forgot pass :-  :- ", res.data);
+    this.setState({message:res.data});
+     });
+    }
+    else{
+        let ShowDs = "Password Does Not Match"
+        this.setState({Password:ShowDs});
+    }
+    event.target.Pass1.value = null;
+    event.target.Pass2.value = null;
   };
-  removeMail = event => {
-    this.setState({ errorMail: null });
-    document.getElementById("checkformail").style.backgroundColor = "white";
-    document.getElementById("checkformail").placeholder = "Enter your Email";
-  };
-
+  RemoveFunction = event =>{
+      event.preventDefault();
+      let ShowDs = "";
+      this.setState({Password:ShowDs})
+  }
   render() {
+    if(this.state.message == "Password Updated"){
+      console.log("... ",this.state.message)
+      alert("password is updated secussfully!!");
+      return(
+        <Redirect to="/" />
+      )
+    }else{
     return (
       <div>
+        {
+          // <meta charSet="utf-8" />
+          // <title>Forgot Password</title>
+          // <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
+          // <link
+          //   href="css/bootstrap-responsive.css"
+          //   rel="stylesheet"
+          //   type="text/css"
+          // />
+        }
         <meta charSet="utf-8" />
       <title>Create An Account</title>
       <link href="/css/bootstrap.css" rel="stylesheet" type="text/css" />
@@ -215,79 +201,50 @@ class App extends React.Component {
             </select>
             
             </div> 
-            <div id="LogOutId" className="info_div1" style={{marginRight:"-100px", marginTop:"-30px"}}><Link to="/"><button style={{backgroundColor:"orange",textShadow:"0 0 3px #ff0000, 0 0 5px #0000ff" , color:"pink",border:"none", fontSize:"20px", padding:"5px"}}>Logout!</button></Link>
-            </div>   
+            {/* <div id="LogOutId" className="info_div1" style={{marginRight:"-100px", marginTop:"-30px"}}><Link to="/"><button style={{backgroundColor:"orange",textShadow:"0 0 3px #ff0000, 0 0 5px #0000ff" , color:"pink",border:"none", fontSize:"20px", padding:"5px"}}>Logout!</button></Link>
+            </div>    */}
           </div>
         </div>
       </div>
 
+        {/* <div className="popup_sec" id="pop_forgt">
+          <div className="clos_btn">
+            <img src="images/clos.png" alt="" id="clos_pop" />
+          </div>
+          <div className="pop_hdr">
+            A mail has been send to your e-mail Id for Reset Password Link
+          </div>
+          <div className="man_contnt">
+            <span>Please Check Your Mail Box!</span>
+            <input type="submit" defaultValue="Ok" />
+          </div>
+        </div> */}
         <div className="container">
           <div className="content">
             <div className="content_rgt">
               <div className="register_sec">
+                  <h1>{this.state.Password}{this.state.message}</h1>
+                <h1>Reset Password</h1>
                 <form onSubmit={this.submitFunction}>
-                  <h1>{this.state.Mainh}</h1>
-                  <h1>Create An Account</h1>
                   <ul>
-                    <li>
-                      <span>Username</span>
-                      <input
-                        type="text"
-                        placeholder="Enter your username"
-                        name="Username1"
-                      />
-                    </li>
-                    <li>
-                      <span>Password</span>
+                    <li><span>Enter New Password</span>
+                    <input type="password" name="Pass1" placeholder="Enter Password" onClick = {this.RemoveFunction} required /><br></br>
+                      <span>Re Enter Password</span>
                       <input
                         type="password"
-                        name="Password1"
-                        placeholder="Enter your password"
+                        placeholder="Re Enter Password"
+                        name="Pass2"
+                        onClick = {this.RemoveFunction}
+                        required
                       />
                     </li>
                     <li>
-                      <span>Email</span>
-                      <input
-                        type="email"
-                        name="Email1"
-                        placeholder="Enter your email"
-                        onClick={this.removeMail}
-                        id="checkformail"
-                      />
-                    </li>
-                    <li>{this.state.errorMail}</li>
-                    <li>
-                      <span>First Name</span>
-                      <input
-                        type="text"
-                        name="FirstName1"
-                        placeholder="Enter your first name"
-                      />
-                    </li>
-                    <li>
-                      <span>Last Name</span>
-                      <input
-                        type="text"
-                        name="LastName1"
-                        placeholder="Enter your last name"
-                      />
-                    </li>
-                    <li>
-                      <input type="checkbox" required name="check1" />I agree to
-                      Term &amp; Conditions
-                    </li>
-                    <li>
-                      <input type="submit" defaultValue="Register" />
+                      <input type="submit" defaultValue="Submit" />
                     </li>
                   </ul>
                 </form>
-                <div className="addtnal_acnt">
-                  I already have an account.
-                  <Link to="/">Login My Account !</Link>
-                </div>
               </div>
             </div>
-
             <div className="content_lft">
               <h1>Welcome from PPL!</h1>
               <p className="discrptn">
@@ -298,58 +255,13 @@ class App extends React.Component {
                 Ipsum, you need to be sure there isn't anything embarrassing
                 hidden in the middle of text.{" "}
               </p>
-              <img src="images/img_9.png" alt="" />{" "}
+              <img src="/images/img_9.png" alt="" />{" "}
             </div>
           </div>
         </div>
       </div>
     );
+      }
   }
 }
-// class Another extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {};
-
-//     console.log("Another constructor is executed.................");
-//   }
-//   static getDerivedStateFromProps() {
-//     console.log("Another getDerivedstatefromprops is executed................");
-//     return true;
-//   }
-//   render() {
-//     return (
-//       <div>
-//         {console.log("Another RENDER is executed...------------------")}
-//       </div>
-//     );
-//   }
-//   componentDidMount() {
-//     console.log(
-//       "Another ComponentDidMount is executed............................"
-//     );
-//   }
-// }
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-export default App;
+export default ResetPassword;

@@ -3,7 +3,7 @@ var router = express.Router();
 var userApi = require("./userapi");
 var multer = require("multer");
 var pplmongoDb = require("./pplschema");
-var pplSinglePostLikemongoDb = require("./singlepostlike");
+var pplSinglePostCommentmongoDb = require("./imagecomments");
 var invitepplmongoDb = require("./invitepplschema");
 var bodyparser = require("body-parser");
 //console.log("before storage :-    ------")
@@ -80,15 +80,33 @@ router.post("/fetch_get", async function(req, res) {
 router.post("/login_get", async function(req, res) {
   try {
     let k = await userApi.LogIn(req.body);
-    //console.log("k is is is is at router for ppllogin",k)
+    console.log("k is is is is at router for ppllogin",k)
     if(k.length > 0){
-      let userDataIs = {
-        ss:"You Have Secussfully Loged In......",
-        id:k
-      }
-      //let ss = "You Have Secussfully Loged In......";
-    res.send(userDataIs);
+      if( k === "Password does not matched!."){
+        let userDataIs = {
+          ss:k,
+          id:k
+        }
+        res.send(userDataIs);
     console.log("userDataIs :-",userDataIs);
+      }else if(k === "E-Mail Does Not Exist.."){
+        let userDataIs = {
+          ss:k,
+          id:k
+        }
+        res.send(userDataIs);
+    console.log("userDataIs :-",userDataIs);
+      }else {
+        let userDataIs = {
+          ss:"You Have Secussfully Loged In......",
+          id:k
+        }
+        res.send(userDataIs);
+    console.log("userDataIs :-",userDataIs);
+      }
+      
+      //let ss = "You Have Secussfully Loged In......";
+    
     }
   } catch (err) {
     console.log(err);
@@ -103,6 +121,20 @@ router.post("/login_get", async function(req, res) {
 //   }
 // });
 
+router.post('/ForgotPass_get', async function(req,res) {
+  try{
+    let ForgotPasswordData = await userApi.ForgotPassword(req.body);
+    if(ForgotPasswordData.length > 0){
+      res.send(ForgotPasswordData);
+    }
+  }catch(err){console.log(err)}
+})
+router.post('/ResetPass_get', async function(req,res){
+  try{
+      let ResetPasswordData = await userApi.ResetPassword(req.body);
+      res.send(ResetPasswordData);
+  }catch(err){console.log(err)}
+})
 router.post('/invite_get', uploadinvite.single('file'),function (req, res)  {
   //console.log("File body", req.file);
   //console.log(req.file.originalname);
@@ -220,19 +252,104 @@ router.post('/SinglePostFetch_get', async function(req,res) {
      console.error(err);
       }
 })
+router.post('/Storecomment_get', async function(req,res){
+  const PushData ={
+    _id: req.body._id,
+    userid: req.body.userid,
+    comments: req.body.CommentS
+  }
+try{
+console.log("data at router of PushComments :- ",req.body);
+pplSinglePostCommentmongoDb.find({_id:req.body._id}, function(err, result){
+  if(result.length > 0){
 
+    pplSinglePostCommentmongoDb.find({_id:req.body._id},{userid:{$elemMatch :{$eq:req.body.userid}},_id:1}, function(err, resu){
+       console.log("-..######  :- ",resu[0].userid.length);
+       if(resu[0].userid.length > 0){
+        pplSinglePostCommentmongoDb.updateOne({_id:req.body._id},{$push:{comments:req.body.CommentS}}, function (err,result){
+          if(result){
+            console.log("comment is updated :- ",result);
+              pplSinglePostCommentmongoDb.find({_id:req.body._id} , function(err, re){
+                if(re){
+                  console.log("result fetched of single post is :- ",re);
+                  res.send(re);
+                }
+              })
+          }
+          })
+      }else{
+    pplSinglePostCommentmongoDb.updateOne({_id:req.body._id},{$push:{userid:req.body.userid ,comments:req.body.CommentS}}, function (err,result){
+      if(result){
+        console.log("comment is updated :- ",result);
+          pplSinglePostCommentmongoDb.find({_id:req.body._id} , function(err, re){
+            if(re){
+              console.log("result fetched of single post is :- ",re);
+              res.send(re);
+            }
+          })
+      }
+      })
+  }
+})
+}else{
+    pplSinglePostCommentmongoDb.create(PushData , function(err, resu){
+      if(resu){
+        console.log("comments Data Pushed :- ",resu);
+        res.send(resu);
+      }
+    })
+  }
+})
+}catch(err){
+  console.error(err);
+}
+})
+
+router.post('/pushRepComments_get', async function(req,res){
+  let ResCommHold = {
+    _id:req.body._id,
+    commentsResponse:req.body.commentsResponse
+  }
+  try{
+    pplSinglePostCommentmongoDb.updateOne({_id:req.body._id},{$push:{commentsResponse:req.body.commentsResponse}}, function (err,result){
+    if(result){
+      console.log("reply of comment is stored");
+      res.send(result);
+    }
+    })
+  }catch(err){console.log(err)}
+})
+
+router.post('/FetchCommentResponsess_get', async function(req,res){
+  pplSinglePostCommentmongoDb.find({_id:req.body._id} , function(err,result){
+    if(result){
+      console.log("comment response is fetching from database at router is:--",result);
+      res.send(result);
+    }else{console.log(err)}
+  })
+})
+
+router.post('/FetchComments_get', async function(req,res){
+  pplSinglePostCommentmongoDb.find({_id:req.body._id} , function(err,result){
+    if(result){
+      console.log("comment is fetching from database at router is:--",result);
+      res.send(result);
+    }else{console.log(err)}
+  })
+})
+router.post('/FetchCommentTimeline_get', async function(req,res){
+  pplSinglePostCommentmongoDb.find({},{_id:1, comments:1}, function(err,result){
+    if(result){
+      console.log("comment is fetching from database at router is:--",result);
+      res.send(result);
+    }else{console.log(err)}
+  })
+})
 router.post('/fetchLikes_get', async function(req,res) {
-  console.log("singlepost likes fetch at userrouter is:- ",req.body);
   try {
-    console.log("Entered in the timeline...." );
-    pplmongoDb.find({_id:req.body.id},function(err, re) {
-     let StatusInResult = {
-       dataFromDatabase: re,
-       status: "singlepost data fetched for likes"
-      };
+    pplmongoDb.find({},{_id:1,likes:1}, function(err, re) {
       console.log("data fetched in singlepost:- ",re)
-    console.log("profile is :- ",StatusInResult.status);
-   res.send(StatusInResult);
+   res.send(re);
     })
     } catch (err) {
      console.error(err);
@@ -247,7 +364,7 @@ router.post('/Likes_get', async function(req,res) {
       likes:req.body.userid
     }
     console.log("userId is",req.body.userid);
-    pplmongoDb.find({_id:req.body.imageid},{likes:{$elemMatch :{$eq:req.body.userid}},_id:0}, function(err, resu){
+   pplmongoDb.find({_id:req.body.imageid},{likes:{$elemMatch :{$eq:req.body.userid}},_id:1}, function(err, resu){
       console.log("-..######  :- ",resu[0].likes.length);
       if(resu[0].likes.length > 0){
         console.log("res of find like in db :- ", resu);
@@ -258,10 +375,10 @@ router.post('/Likes_get', async function(req,res) {
         pplmongoDb.updateOne({_id:req.body.imageid},{$push:{likes:req.body.userid}}, function (err,result){
           if(result){
             console.log(result)
-            pplmongoDb.find({_id:req.body.imageid},{likes:1}, function(err,re){
+            pplmongoDb.find({},{likes:1, _id:1}, function(err,re){
               if(result){
-                console.log("res is at likes on timeline at router is :- ",re[0].likes)
-                console.log("likes is :-", re[0].likes.length);
+                console.log("res is at likes on timeline at router is :- ",re)
+               // console.log("likes is :-", re[0].likes.length);
                 res.send(re);
               }else{
                 console.log(err);
@@ -275,8 +392,10 @@ router.post('/Likes_get', async function(req,res) {
           }
         })
 
-      }
+     }
     })
+
+
     // console.log("data is:- ",data);
     // console.log("Entered in the timeline.... with Singlepost likes..",req.body.imageid);
     // //console.log("res of body of likes is:- ",req.body.likes)

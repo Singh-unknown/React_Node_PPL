@@ -17,8 +17,9 @@ class Timeline extends React.Component {
       commingImage:[],
       commingIcon:[],
       SendSinglePost:[],
-      like:0,
-      comment:0
+      like:[],
+      comment:[],
+      likesimageid:""
     };
   }
   SubmitFunction = event => {
@@ -38,7 +39,7 @@ class Timeline extends React.Component {
     axios.post("http://localhost:8081/timeline_get", formData).then(res => {
       console.log("res is :- ", res.data);
       console.log("safgddsfdsafdsafdsafdsfdsfsdfdsfsf",res.data)
-      var SetData = res.data.dataFromDatabase.map(data=>{return data})
+      var SetData = res.data.dataFromDatabase.reverse().map(data=>{return data})
         this.setState({ReceivedData:SetData});
       document.getElementById("FormId").style.display = "none";
     }).catch((err) => {console.log(err)});
@@ -68,7 +69,7 @@ class Timeline extends React.Component {
    InviteformData.append('file',event.target.file.files[0])
    axios.post("http://localhost:8081/invite_get",InviteformData).then(res=>{
     console.log("res of Invite is :- ", res.data);
-    var tempDataForInvite = res.data.dataFromDatabase.reverse().map(data => {return data})
+    var tempDataForInvite = res.data.dataFromDatabase.map(data => {return data})
     this.setState({inviteReceive:tempDataForInvite});
     console.log("data in invite :- ", this.state.inviteReceive)
     document.getElementById("InviteId").style.display = "none";
@@ -90,19 +91,15 @@ class Timeline extends React.Component {
     
   }
   LikesAtDidmount = event => {
-    // event.preventDefault();
-    console.log("after didmount fetch likes:-----------------",imageTempId)
-     console.log("userid at single post is:- ",this.state.userid);
      console.log("like is is like :- ",this.state.like);
      const LikesSend = {
          id:this.state.userid
      }
-     axios.post("http://localhost:8081/fetchLikes_get",LikesSend).then(res => {
-         this.setState({like:res.data.dataFromDatabase[0].likes,
-        defaultlike:res.data.dataFromDatabase[0].likes
-        })
-         console.log("res in likes is:- ",res.data);
-         console.log("likes from db is:- ",res.data.dataFromDatabase[0].likes);
+     axios.post("http://localhost:8081/fetchLikes_get").then(res => {
+        console.log("likes fetch data is:- ()()():-",res.data);
+        var TemporaryFetchLikesHold = res.data.map(result =>{return result});
+         this.setState({like:TemporaryFetchLikesHold})
+         console.log("likes at the fetching state after didmount is:-",this.state.like);
      }).catch(err => console.log(err));
  
  //this.setState({like:this.state.like+1})
@@ -124,8 +121,10 @@ class Timeline extends React.Component {
       if(res.data === "Already Liked"){
 
       }else{
-        this.setState({like:res.data[0].likes.length})
-        console.log("res in likes is:- ",res.data);
+        var TemporaryLikesHold = res.data.map(result => {return result});
+        this.setState({like:TemporaryLikesHold});
+        //this.setState({like:res.data[0].likes.length,likesimageid:res.data[0]._id})
+        console.log("res in likes is ???  :- ",this.state.like);
       }
         console.log("likes from db is:- ",res.data[0].likes.length);
     }).catch(err => console.log(err));
@@ -134,28 +133,192 @@ class Timeline extends React.Component {
 //this.setState({like:this.state.like+1})
 console.log("likes",this.state.like);
   }
+  ShowComments = event => {
+    console.log("show comments at timeline...............")
+    axios.post("http://localhost:8081/FetchCommentTimeline_get").then(res =>{
+      console.log("fetchcommentstimeline id :- ",res.data);
+      let CommentHolder = res.data.map(result => {return result});
+      this.setState({comment:CommentHolder})
+    }).catch(err => {console.log(err)})
+  }
   ShowUploadedImages = event => {
     axios.post("http://localhost:8081/uploadimages_get").then(res=>{
     console.log("res of Invite is :- ", res.data);
     var tempCommingImages = res.data.dataFromDatabase.reverse().map(data => {return data})
-    this.setState({commingImage:tempCommingImages});
+    this.setState({ReceivedData:tempCommingImages});
   });
   }
   ShowUploadInvite =event => {
     axios.post("http://localhost:8081/uploadicons_get").then(res=>{
     console.log("res of Invite when fetching icons is :- ", res.data);
     var tempCommingIcon = res.data.dataFromDatabase.map(data => {return data})
-    this.setState({commingIcon:tempCommingIcon});
+    this.setState({inviteReceive:tempCommingIcon});
   });
   }
   componentDidMount = () => {
     this.ShowUploadedImages();
     this.ShowUploadInvite();
     this.LikesAtDidmount();
+    this.ShowComments();
   }
   render() {
     return (
       <div>
+
+<meta charSet="utf-8" />
+      <title>Create An Account</title>
+      <link href="/css/bootstrap.css" rel="stylesheet" type="text/css" />
+      <link
+        href="/css/bootstrap-responsive.css"
+        rel="stylesheet"
+        type="text/css"
+      />
+      <div className="navbar navbar-inverse navbar-fixed-top">
+        <div className="navbar-inner">
+          <div className="container">
+            <button
+              type="button"
+              className="btn btn-navbar"
+              data-toggle="collapse"
+              data-target=".nav-collapse"
+            >
+              {" "}
+              <span className="icon-bar" /> <span className="icon-bar" />{" "}
+              <span className="icon-bar" />{" "}
+            </button>
+            <a className="brand" href>
+              PPL
+            </a>
+            <div className="pro_info pull-right">
+              <div className="pro_icn">
+                <img src="/images/pic_small.png" />
+              </div>
+              <div className="pro_txt">
+                Me
+                <b className="caret" />
+              </div>
+              <ul
+                className="dropdown-menu"
+                role="menu"
+                aria-labelledby="dLabel"
+              >
+                <li>
+                  <a tabIndex={-1} href="#">
+                    My Profile
+                  </a>
+                </li>
+                <li>
+                  <a tabIndex={-1} href="#">
+                    Message Box
+                  </a>
+                </li>
+                <li>
+                  <a tabIndex={-1} href="#">
+                    Change Language
+                  </a>
+                </li>
+                <li className="divider" />
+                <li>
+                  <a tabIndex={-1} href="#">
+                    <input type="text" placeholder="search" />
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div className="nav-collapse collapse">
+              <ul className="nav">
+                <li className="active">
+                  {" "}
+                  <a href>Home</a>{" "}
+                </li>
+                <li className>
+                  {" "}
+                  <a href>E-Coupons</a>{" "}
+                </li>
+                <li className>
+                  {" "}
+                  <a href>E-Brands</a>{" "}
+                </li>
+                <li className>
+                  {" "}
+                  <a href>Resuse Market</a>{" "}
+                </li>
+                <li className>
+                  {" "}
+                  <a href>Lost and Found</a>{" "}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="header">
+        <div className="header_lft">
+          <div className="logo">
+            <a href="#">
+              <img src="/images/logo.png" />
+            </a>
+          </div>
+          <div className="navigatn">
+            <ul>
+              <li>
+                <a href="#" className="active">
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="#"> E-Coupons </a>
+              </li>
+              <li>
+                <a href="#">E-Brands </a>
+              </li>
+              <li>
+                <a href="#"> Resuse Market </a>
+              </li>
+              <li>
+                <a href="#"> Lost and Found</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="header_rgt">
+          <div className="flag_div">
+            <img src="/images/flag.png" />
+          </div>
+          <input type="text" placeholder="Search" className="txt_box" />
+          <div className="msg_box">
+            <a href="#">
+              <span className="msg_count">100</span>
+            </a>
+          </div>
+          <div className="info_div">
+            <div className="image_div">
+              {" "}
+              <img src="/images/pic.png" />{" "}
+            </div>
+            {/* <div className="info_div1" onClick={this.MeOptionFunction}>Me</div> */}
+            <div className="info_div1" style={{marginRight:"10px"}}>Me</div>
+            <div className="info_div1"  id="MeElement" style={{ marginTop:"-25px", marginRight:"-9px"}}>
+           
+            <select name="Options" onClick={this.LogOutFunction} style={{width:"40px", backgroundColor:"orange", border:"none", color:"white"}}>
+              <option></option>
+              <option value="myprofile">My Profile</option>
+              <option></option>
+              <option value="messagebox">Message Box</option>
+              <option></option>
+              <option value="logout">hhhh</option>
+              <option></option>
+              <option value="changelanguage">Change Language</option>
+            </select>
+            
+            </div> 
+            <div id="LogOutId" className="info_div1" style={{marginRight:"-100px", marginTop:"-30px"}}><Link to="/"><button style={{backgroundColor:"orange",textShadow:"0 0 3px #ff0000, 0 0 5px #0000ff" , color:"pink",border:"none", fontSize:"20px", padding:"5px"}}>Logout!</button></Link>
+            </div>   
+          </div>
+        </div>
+      </div>
+
+
         <div className="container">
           <div className="content">
             <div className="content_rgt">
@@ -231,7 +394,6 @@ console.log("likes",this.state.like);
                       </li>
                     <div>
                       {this.state.inviteReceive.reverse().map((re,i )=> <InviteChild  key={i} result ={re} />)}
-                      {this.state.commingIcon.reverse().map((re,i )=> <InviteChild  key={i} result ={re} />)}
                     </div>
                     <li>
                       <a href="#">
@@ -372,8 +534,8 @@ console.log("likes",this.state.like);
                 </form>
               </div>
               {console.log("ffhjvjhgjk",this.state.ReceivedData)}
-              <div><ul> {this.state.ReceivedData.map((res,i) => <Child key = {i} data={res} LikesFunction={this.LikesFunction} like={this.state.like}/> )} 
-              {this.state.commingImage.map((res,i) => <Child key = {i} data={res} LikesFunction={this.LikesFunction} like={this.state.like}/> )}
+              <div><ul> {this.state.ReceivedData.map((res,i) => <Child key = {i} data={res} LikesFunction={this.LikesFunction}  like={this.state.like} comments={this.state.comment} /> )} 
+             
               </ul>
               </div>
 
@@ -508,6 +670,7 @@ console.log("likes",this.state.like);
   }
 }
 class Child extends React.Component  {
+ 
 render(){
   return (
     <div><li>
@@ -529,7 +692,7 @@ render(){
       </div>
     </div>
     <div className="div_image">
-      {//console.log("raka is a good boy",this.props.data._id)
+      {console.log("raka is a good boy",this.props.data._id)
       }
      <Link to={"/SinglePost/"+this.props.data._id} > <img src={"http://localhost:8081/"+ this.props.data.image} alt="pet" /></Link>
     </div>
@@ -558,15 +721,15 @@ render(){
               <span className="btn_icon">
                 <img src="images/icon_003.png" alt="share" />
               </span>
-              {this.props.like} Likes
+          {this.props.like.map((res,i) => <SubChild likes={res.likes} key={i} ImgId={res._id} staticimgid={this.props.data._id}/>)} Likes
             </a>
           </li>
-          <li>
+          <li >
             <a >
               <span className="btn_icon">
                 <img src="images/icon_004.png" alt="share" />
               </span>
-              4 Comments
+              {this.props.comments.map((res,i) => <SubCommentChild comments={res.comments} key={i} ImgId={res._id} staticimgid={this.props.data._id}/>)} Comments
             </a>
           </li>
         </ul>
@@ -580,6 +743,26 @@ render(){
 
 )
 }}
+class SubChild extends React.Component {
+  render(){
+    return(
+    <div className="btn_icon">
+    <div className="btm_list"> 
+      {(this.props.ImgId == this.props.staticimgid) ? this.props.likes.length: ""}
+    </div>
+    </div>)
+  }
+}
+class SubCommentChild extends React.Component {
+  render(){
+    return(
+    <div className="btn_icon">
+    <div className="btm_list"> 
+      {(this.props.ImgId == this.props.staticimgid) ? this.props.comments.length: ""}
+    </div>
+    </div>)
+  }
+}
 class InviteChild extends React.Component {
   render(){
     return(

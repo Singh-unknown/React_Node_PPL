@@ -55,6 +55,31 @@ module.exports = {
       });
     });
   },
+  ForgotPassword : function(data){
+      return new Promise((resolve, reject) => {
+        mongoDb.find({Email:data.email, Username:data.user},{Username:1}, function(err, result){
+          if(result.length > 0){
+            let ResponseSend = "Data Is There";
+            resolve(ResponseSend);
+          }
+          else{
+            let ResponseSend = "Data Is Not There";
+            resolve(ResponseSend);
+          }
+        })
+      })
+  },
+  ResetPassword: function(data){
+      return new Promise((resolve, reject) => {
+        mongoDb.update({Email:data.email},{$set:{Password:data.password}}, function(err, result){
+          if(result){
+            console.log(result);
+            let ResetPass = "Password Updated";
+            resolve(ResetPass);
+          }
+        })
+      })
+  },
   FetchData: function(data) {
     return new Promise((resolve, reject) => {
       console.log("Fetching means View the data in the Data Base..");
